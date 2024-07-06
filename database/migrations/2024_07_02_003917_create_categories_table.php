@@ -14,11 +14,13 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Category::class)->nullable()->constrained();
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('name');
             $table->string('image')->nullable();
             $table->boolean('is_active')->default(1);
             $table->timestamps();
+
+            $table->foreign('parent_id')->references('id')->on('categories');
         });
     }
 

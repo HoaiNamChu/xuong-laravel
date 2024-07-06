@@ -10,7 +10,7 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
-        'category_id',
+        'parent_id',
         'name',
         'image',
         'is_active',
@@ -19,4 +19,17 @@ class Category extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    // Quan hệ cha (parent)
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    // Quan hệ con (children)
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
+
 }
