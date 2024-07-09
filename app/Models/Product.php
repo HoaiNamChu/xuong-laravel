@@ -36,4 +36,23 @@ class Product extends Model
         'product_is_new'=> 'boolean',
         'product_is_show_home'=> 'boolean',
     ];
+
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(ProductTag::class);
+    }
+
+    public function galleries(){
+        return $this->hasMany(ProductGallery::class);
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
 }

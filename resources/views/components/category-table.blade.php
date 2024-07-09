@@ -8,9 +8,9 @@
     <td> {{ $category->created_at }}</td>
     <td> {{ $category->updated_at }}</td>
     <td>
-        <button class="btn btn-info">Show</button>
+        <a href="{{ route('admin.categories.show', $category) }}"><button class="btn btn-info">Show</button></a>
         <a href="{{ route('admin.categories.edit', $category) }}"><button class="btn btn-warning">Edit</button></a>
-        <form action="{{ route('admin.categories.destroy', $category) }}" method="POST">
+        <form action="{{ route('admin.categories.destroy', $category) }}" class="d-inline-block" method="POST">
             @csrf
             @method('DELETE')
             <button class="btn btn-danger" type="submit">Delete</button>

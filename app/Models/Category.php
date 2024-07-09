@@ -21,6 +21,7 @@ class Category extends Model
     ];
 
     // Quan hệ cha (parent)
+
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');

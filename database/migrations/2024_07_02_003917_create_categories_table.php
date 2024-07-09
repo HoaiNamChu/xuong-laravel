@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(1);
             $table->timestamps();
 
-            $table->foreign('parent_id')->references('id')->on('categories');
+            $table->foreign('parent_id')->references('id')->on('categories')->onDelete('SET NULL');
         });
     }
 

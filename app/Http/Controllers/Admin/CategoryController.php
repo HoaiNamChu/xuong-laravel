@@ -93,7 +93,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
 //        $model = Category::query()->findOrFail($category);
-
+        $category->newQuery()->findOrFail($category->id);
         $category->delete();
 
         if ($category->image && Storage::exists($category->image)) {

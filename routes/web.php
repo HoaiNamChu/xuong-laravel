@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductAttributeController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductTagController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +26,10 @@ Route::prefix('admin')->as('admin.')->group(function () {
         return view('admin.dashboard');
     })->name('dashboard');
     Route::resource('categories', CategoryController::class);
+    Route::resource('products', ProductController::class);
+    Route::resource('productAttributes', ProductAttributeController::class);
+    Route::resource('productTags', ProductTagController::class);
+
 });
 Auth::routes();
 
