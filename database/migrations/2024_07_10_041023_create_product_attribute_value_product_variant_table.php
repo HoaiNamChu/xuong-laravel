@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('variant_attibute_value', function (Blueprint $table) {
-            $table->foreignIdFor(\App\Models\ProductVariant::class)->constrained();
+        Schema::create('product_attribute_value_product_variant', function (Blueprint $table) {
             $table->foreignIdFor(\App\Models\ProductAttributeValue::class)->constrained();
+            $table->foreignIdFor(\App\Models\ProductVariant::class)->constrained();
 
-            $table->primary(['product_variant_id', 'product_attribute_value_id']);
+            $table->primary(['product_attribute_value_id', 'product_variant_id']);
         });
     }
 
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('variant_attibute_value');
+        Schema::dropIfExists('product_attribute_value_product_variant');
     }
 };

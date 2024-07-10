@@ -37,7 +37,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="product-sku">SKU</label>
-                            <input type="text" class="form-control" name="product_sku" id="product-sku">
+                            <input type="text" class="form-control" name="product_sku" id="product-sku"
+                                   value="{{ strtoupper(\Illuminate\Support\Str::random(8)) }}">
                         </div>
                         <div>
                             <label>Product Description</label>
@@ -62,82 +63,88 @@
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane active" id="addproduct-general-info" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="manufacturer-name-input">Manufacturer
-                                                Name</label>
-                                            <input type="text" class="form-control"
-                                                   id="manufacturer-name-input"
-                                                   placeholder="Enter manufacturer name">
-                                        </div>
+                                @foreach($productVariants as $productVariant)
+                                    <div class="row mb-3">
+                                        @php
+                                            $attributeValueId = '';
+                                        @endphp
+                                        @foreach($productVariant as $item)
+                                            @php
+                                                $attributeValueId.=$item->id.'-';
+                                            @endphp
+                                            <div class="col-1">
+                                                <b>{{ $item->product_attribute_value_name }}</b>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                    <div class="col-lg-6">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="manufacturer-brand-input">Manufacturer
-                                                Brand</label>
-                                            <input type="text" class="form-control"
-                                                   id="manufacturer-brand-input"
-                                                   placeholder="Enter manufacturer brand">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="sku-input">SKU</label>
+                                                <input type="text" class="form-control"
+                                                       id="sku-input"
+                                                       name="product_variants[{{ $attributeValueId }}][product_variant_sku]"
+                                                       placeholder="Enter SKU"
+                                                       value="{{ strtoupper(\Illuminate\Support\Str::random(8)) }}">
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <!-- end row -->
-
-                                <div class="row">
-                                    <div class="col-lg-3 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="stocks-input">Stocks</label>
-                                            <input type="text" class="form-control" id="stocks-input"
-                                                   placeholder="Stocks" required>
-                                            <div class="invalid-feedback">Please Enter a product stocks.
+                                        <div class="col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="t">Image</label>
+                                                <input type="file" class="form-control"
+                                                       name="product_variants[{{ $attributeValueId }}][product_variant_image]"
+                                                       id="manufacturer-brand-input"
+                                                       placeholder="Enter manufacturer brand">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label"
-                                                   for="product-price-input">Price</label>
-                                            <div class="input-group has-validation mb-3">
+                                    <!-- end row -->
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="quantity-input">Quantity</label>
+                                                <input type="text" class="form-control" id="quantity-input"
+                                                       placeholder="Stocks" name="product_variants[{{ $attributeValueId }}][product_variant_quantity]">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label"
+                                                       for="product-price-input">Price</label>
+                                                <div class="input-group has-validation mb-3">
                                                                             <span class="input-group-text"
                                                                                   id="product-price-addon">$</span>
-                                                <input type="text" class="form-control"
-                                                       id="product-price-input" placeholder="Enter price"
-                                                       aria-label="Price"
-                                                       aria-describedby="product-price-addon" required>
-                                                <div class="invalid-feedback">Please Enter a product
-                                                    price.
+                                                    <input type="text" class="form-control"
+                                                           id="product-price-input"
+                                                           name="product_variants[{{ $attributeValueId }}][product_variant_price]"
+                                                           placeholder="Enter price"
+                                                           aria-label="Price"
+                                                           aria-describedby="product-price-addon">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label"
+                                                       for="product-discount-input">Price Sale</label>
+                                                <div class="input-group mb-3">
+                                                                            <span class="input-group-text"
+                                                                                  id="product-discount-addon">$</span>
+                                                    <input type="text" class="form-control"
+                                                           id="product-discount-input"
+                                                           name="product_variants[{{ $attributeValueId }}][product_variant_price_sale]"
+                                                           placeholder="Enter discount" aria-label="discount"
+                                                           aria-describedby="product-discount-addon">
                                                 </div>
                                             </div>
-
                                         </div>
+                                        <!-- end col -->
                                     </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label"
-                                                   for="product-discount-input">Discount</label>
-                                            <div class="input-group mb-3">
-                                                                            <span class="input-group-text"
-                                                                                  id="product-discount-addon">%</span>
-                                                <input type="text" class="form-control"
-                                                       id="product-discount-input"
-                                                       placeholder="Enter discount" aria-label="discount"
-                                                       aria-describedby="product-discount-addon">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="orders-input">Orders</label>
-                                            <input type="text" class="form-control" id="orders-input"
-                                                   placeholder="Orders" required>
-                                            <div class="invalid-feedback">Please Enter a product orders.
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end col -->
-                                </div>
-                                <!-- end row -->
+                                    <!-- end row -->
+                                    <hr>
+                                @endforeach
                             </div>
                         </div>
                         <!-- end tab content -->

@@ -17,4 +17,9 @@ class ProductVariant extends Model
         'product_variant_price_sale',
         'product_variant_image',
     ];
+
+    public function productAttributeValues()
+    {
+        return $this->belongsToMany(ProductAttributeValue::class);
+    }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Product::class)->constrained();
             $table->string('product_variant_sku')->nullable();
             $table->unsignedInteger('product_variant_quantity')->default(0);
-            $table->double('product_variant_price');
+            $table->double('product_variant_price')->default(0);
             $table->double('product_variant_price_sale')->nullable();
             $table->string('product_variant_image')->nullable();
             $table->timestamps();

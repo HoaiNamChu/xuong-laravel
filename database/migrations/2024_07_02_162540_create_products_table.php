@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('product_slug')->unique();
             $table->string('product_sku')->unique();
             $table->string('product_image')->nullable();
-            $table->double('product_price');
+            $table->double('product_price')->default(0);
             $table->double('product_price_sale')->nullable();
             $table->unsignedInteger('product_quantity')->default(0);
             $table->string('product_description')->nullable();
