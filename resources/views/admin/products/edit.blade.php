@@ -11,12 +11,12 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Create Product</h4>
+                <h4 class="mb-sm-0">Edit Product</h4>
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
-                        <li class="breadcrumb-item active">Create Product</li>
+                        <li class="breadcrumb-item active">Edit Product</li>
                     </ol>
                 </div>
 
@@ -25,32 +25,37 @@
     </div>
     <!-- end page title -->
 
-    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data">
         @csrf
+        @method('PUT')
         <div class="row">
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label" for="product-name">Product Name</label>
-                            <input type="text" class="form-control" name="product_name" id="product-name">
+                            <input type="text" class="form-control" name="product_name"
+                                   value="{{ $product->product_name }}" id="product-name">
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="product-sku">SKU</label>
                             <input type="text" class="form-control" name="product_sku" id="product-sku"
-                                   value="{{ strtoupper(\Illuminate\Support\Str::random(8)) }}">
+                                   value="{{ $product->product_sku }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="product-material">Product Material</label>
-                            <input type="text" class="form-control" name="product_material" id="product-material">
+                            <input type="text" class="form-control" value="{{ $product->product_material }}"
+                                   name="product_material" id="product-material">
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="product-user-manual">Product User Manual</label>
-                            <input type="text" class="form-control" name="product_user_manual" id="product-user-manual">
+                            <input type="text" class="form-control" value="{{ $product->product_user_manual }}"
+                                   name="product_user_manual" id="product-user-manual">
                         </div>
                         <div>
                             <label>Product Description</label>
-                            <textarea name="product_content" id="ckeditor-classic"></textarea>
+                            <textarea name="product_content" value="{{ $product->product_content }}"
+                                      id="ckeditor-classic"></textarea>
                         </div>
                     </div>
                 </div>
@@ -71,15 +76,15 @@
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane active" id="addproduct-general-info" role="tabpanel">
-                                @foreach($productVariants as $productVariant)
+                                @foreach($product->productVariants as $productVariant)
                                     <div class="row mb-3">
-                                        @php
-                                            $attributeValueId = '';
-                                        @endphp
-                                        @foreach($productVariant as $item)
-                                            @php
-                                                $attributeValueId.=$item->id.'-';
-                                            @endphp
+{{--                                        @php--}}
+{{--                                            $attributeValueId = '';--}}
+{{--                                        @endphp--}}
+                                        @foreach($productVariant->productAttributeValues as $item)
+{{--                                            @php--}}
+{{--                                                $attributeValueId.=$item->id.'-';--}}
+{{--                                            @endphp--}}
                                             <div class="col-1">
                                                 <b>{{ $item->product_attribute_value_name }}</b>
                                             </div>
@@ -91,18 +96,21 @@
                                                 <label class="form-label" for="sku-input">SKU</label>
                                                 <input type="text" class="form-control"
                                                        id="sku-input"
-                                                       name="product_variants[{{ $attributeValueId }}][product_variant_sku]"
+                                                       name="product_variants[{{ $productVariant->id }}][product_variant_sku]"
                                                        placeholder="Enter SKU"
-                                                       value="{{ strtoupper(\Illuminate\Support\Str::random(8)) }}">
+                                                       value="{{ $productVariant->product_variant_sku }}">
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="t">Image</label>
                                                 <input type="file" class="form-control"
-                                                       name="product_variants[{{ $attributeValueId }}][product_variant_image]"
+                                                       name="product_variants[{{ $productVariant->id }}][product_variant_image]"
                                                        id="manufacturer-brand-input"
                                                        placeholder="Enter manufacturer brand">
+                                                <input type="text" hidden
+                                                       name="product_variants[{{ $productVariant->id }}][product_variant_image_old]" value="{{ $productVariant->product_variant_image }}">
+                                                <img src="{{ \Illuminate\Support\Facades\Storage::url($productVariant->product_variant_image) }}" width="70px" height="70px" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -114,7 +122,8 @@
                                                 <label class="form-label" for="quantity-input">Quantity</label>
                                                 <input type="text" class="form-control" id="quantity-input"
                                                        placeholder="Stocks"
-                                                       name="product_variants[{{ $attributeValueId }}][product_variant_quantity]">
+                                                       value="{{ $productVariant->product_variant_quantity }}"
+                                                       name="product_variants[{{ $productVariant->id }}][product_variant_quantity]">
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-sm-6">
@@ -126,7 +135,8 @@
                                                                                   id="product-price-addon">$</span>
                                                     <input type="text" class="form-control"
                                                            id="product-price-input"
-                                                           name="product_variants[{{ $attributeValueId }}][product_variant_price]"
+                                                           value="{{ $productVariant->product_variant_price }}"
+                                                           name="product_variants[{{ $productVariant->id }}][product_variant_price]"
                                                            placeholder="Enter price"
                                                            aria-label="Price"
                                                            aria-describedby="product-price-addon">
@@ -143,7 +153,8 @@
                                                                                   id="product-discount-addon">$</span>
                                                     <input type="text" class="form-control"
                                                            id="product-discount-input"
-                                                           name="product_variants[{{ $attributeValueId }}][product_variant_price_sale]"
+                                                           value="{{ $productVariant->product_variant_price_sale }}"
+                                                           name="product_variants[{{ $productVariant->id }}][product_variant_price_sale]"
                                                            placeholder="Enter discount" aria-label="discount"
                                                            aria-describedby="product-discount-addon">
                                                 </div>
@@ -167,7 +178,9 @@
                     </div>
                     <div class="card-body">
                         <p class="text-muted mb-2">Add short description for product</p>
-                        <textarea class="form-control" name="product_description"
+                        <textarea class="form-control"
+                                  value="{{ $product->product_description }}"
+                                  name="product_description"
                                   placeholder="Must enter minimum of a 100 characters"
                                   rows="3"></textarea>
                     </div>
@@ -184,28 +197,28 @@
                     </div>
                     <div class="card-body">
                         <div class="form-check form-switch form-switch-secondary">
-                            <input class="form-check-input" type="checkbox" role="switch" name="is_active" value="1"
-                                   id="is-active" checked>
+                            <input class="form-check-input" type="checkbox" role="switch" name="product_is_active" value="1"
+                                   id="is-active" @if($product->product_is_active == 1) checked @endif>
                             <label class="form-check-label" for="is-active">Is Active</label>
                         </div>
                         <div class="form-check form-switch form-switch-success">
-                            <input class="form-check-input" type="checkbox" name="is_hot_deal" value="1" role="switch"
-                                   id="is-hot-deal">
+                            <input class="form-check-input" type="checkbox" name="product_is_hot_deal" value="1" role="switch"
+                                   id="is-hot-deal" @if($product->product_is_hot_deal == 1) checked @endif>
                             <label class="form-check-label" for="is-hot-deal">Is Hot Deal</label>
                         </div>
                         <div class="form-check form-switch form-switch-warning">
-                            <input class="form-check-input" type="checkbox" name="is_good_deal" value="1" role="switch"
-                                   id="is-good-deal">
+                            <input class="form-check-input" type="checkbox" name="product_is_good_deal" value="1" role="switch"
+                                   id="is-good-deal" @if($product->product_is_good_deal == 1) checked @endif>
                             <label class="form-check-label" for="is-good-deal">Is Good Deal</label>
                         </div>
                         <div class="form-check form-switch form-switch-danger">
-                            <input class="form-check-input" type="checkbox" name="is_new" value="1" role="switch"
-                                   id="is-new">
+                            <input class="form-check-input" type="checkbox" name="product_is_new" value="1" role="switch"
+                                   id="is-new" @if($product->product_is_new == 1) checked @endif>
                             <label class="form-check-label" for="is-new">Is New</label>
                         </div>
                         <div class="form-check form-switch form-switch-info">
-                            <input class="form-check-input" type="checkbox" name="is_show_home" value="1" role="switch"
-                                   id="is-show-home">
+                            <input class="form-check-input" type="checkbox" name="product_is_show_home" value="1" role="switch"
+                                   id="is-show-home" @if($product->product_is_show_home == 1) checked @endif>
                             <label class="form-check-label" for="is-show-home">Is Show Home</label>
                         </div>
                     </div>
@@ -222,6 +235,11 @@
                         <div>
                             <input type="file" name="product_image" id="product-image">
                         </div>
+                        <div>
+                            <input type="text" hidden name="product_image_old" value="{{ $product->product_image }}">
+                            <img src="{{ \Illuminate\Support\Facades\Storage::url($product->product_image) }}" alt=""
+                                 width="70px" height="70px">
+                        </div>
                     </div>
                 </div>
                 <!-- end card -->
@@ -234,6 +252,12 @@
                         <div>
                             <input type="file" name="product_galleries[]" id="product-gallery" multiple>
                         </div>
+                        @foreach($product->galleries as $gallery)
+                            <div class="d-inline-block">
+                                <img src="{{ \Illuminate\Support\Facades\Storage::url($gallery->product_gallery_image) }}" width="70px" height="70px" alt="">
+                                <input type="text" hidden value="{{$gallery->product_gallery_image}}" name="product_galleries_old[{{ $gallery->id }}][]">
+                            </div>
+                        @endforeach
                     </div>
                 </div>
                 <!-- end card -->
@@ -248,11 +272,11 @@
                                 New</a>Select product category</p>
                         <select class="form-select" name="category_id">
                             <option value="" selected>Trống</option>
-                            @foreach($categories as $cate)
+                            @foreach($categories as $category)
                                 @php
                                     $each = "";
                                 @endphp
-                                <x-category-select :cate="$cate" :each="$each"/>
+                                @include('admin.products.category-edit-select',['category'=>$category,'each'=>$each, 'product'=>$product])
                             @endforeach
                         </select>
                     </div>
@@ -268,10 +292,10 @@
                                                       class="float-end text-decoration-underline">Add
                                 New</a>Select product tag</p>
                         <select class="js-example-basic-multiple" name="tags[]" multiple>
-
+                            @php($productTagIds = $product->tags()->pluck('id')->all())
                             @foreach($productTags as $productTag)
 
-                                <option value="{{ $productTag->id }}">{{ $productTag->product_tag_name }}</option>
+                                <option value="{{ $productTag->id }}" @selected(in_array($productTag->id, $productTagIds))>{{ $productTag->product_tag_name }}</option>
 
                             @endforeach
 

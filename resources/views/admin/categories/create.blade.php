@@ -79,6 +79,7 @@
                                 <div class="col-xxl-6 col-md-6">
                                     <div>
                                         <button type="submit" class="btn btn-primary">Thêm mới</button>
+                                        <a href="{{route('admin.categories.index')}}"><button type="button" class="btn btn-dark">Quay lại danh sách</button></a>
                                     </div>
                                 </div>
                                 <!--end col-->

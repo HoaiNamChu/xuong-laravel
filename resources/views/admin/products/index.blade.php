@@ -2,7 +2,8 @@
 
 @section('links')
     <!-- Sweet Alert css-->
-    <link href="{{ asset('theme/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('theme/admin/assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet"
+          type="text/css"/>
 @endsection
 
 @section('content')
@@ -66,54 +67,82 @@
                                                    value="option">
                                         </div>
                                     </th>
-                                    <th class="sort" data-sort="customer_name">Customer</th>
-                                    <th class="sort" data-sort="email">Email</th>
-                                    <th class="sort" data-sort="phone">Phone</th>
-                                    <th class="sort" data-sort="date">Joining Date</th>
-                                    <th class="sort" data-sort="status">Delivery Status</th>
-                                    <th class="sort" data-sort="action">Action</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>SKU</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Category</th>
+                                    <th>Is Active</th>
+                                    <th>Created At</th>
+                                    <th>Updated At</th>
+                                    <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody class="list form-check-all">
-                                <tr>
-                                    <th scope="row">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="chk_child"
-                                                   value="option1">
-                                        </div>
-                                    </th>
-                                    <td class="id" style="display:none;"><a href="javascript:void(0);"
-                                                                            class="fw-medium link-primary">#VZ2101</a>
-                                    </td>
-                                    <td class="customer_name">Mary Cousar</td>
-                                    <td class="email">marycousar@velzon.com</td>
-                                    <td class="phone">580-464-4694</td>
-                                    <td class="date">06 Apr, 2021</td>
-                                    <td class="status"><span
-                                            class="badge bg-success-subtle text-success text-uppercase">Active</span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <div class="edit">
-                                                <button class="btn btn-sm btn-info show-item-btn"
-                                                        data-bs-toggle="modal" data-bs-target="#showInfo">
-                                                    Show
-                                                </button>
+                                @foreach($products as $product)
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="chk_child"
+                                                       value="option1">
                                             </div>
-                                            <div class="edit">
-                                                <button class="btn btn-sm btn-success edit-item-btn">
-                                                    Edit
-                                                </button>
+                                        </th>
+                                        <td class="id" style="display:none;"><a href="javascript:void(0);"
+                                                                                class="fw-medium link-primary">{{ $product->id }}</a>
+                                        </td>
+                                        <td><img src="{{\Storage::url($product->product_image) }}" width="40px"
+                                                 height="40px" alt=""></td>
+                                        <td>{{ $product->product_name }}</td>
+                                        <td>{{ $product->product_sku }}</td>
+                                        <td>{{ $product->product_quantity }}</td>
+                                        <td>{{ $product->product_price }}</td>
+                                        <td>{{ $product->category->name}}</td>
+                                        <td>
+                                            @if($product->product_is_active == 1)
+                                                <span
+                                                    class="badge bg-success-subtle text-success text-uppercase">Active</span>
+                                            @else
+                                                <span
+                                                    class="badge bg-danger-subtle text-danger text-uppercase">Inactive</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $product->created_at }}</td>
+                                        <td>{{ $product->updated_at }}</td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <div class="show">
+                                                    <a href="{{ route('admin.products.show', $product) }}">
+                                                        <button class="btn btn-sm btn-info show-item-btn">Show</button>
+                                                    </a>
+                                                </div>
+                                                <div class="edit">
+                                                    <a href="{{ route('admin.products.edit',$product) }}">
+                                                        <button class="btn btn-sm btn-success edit-item-btn">
+                                                            Edit
+                                                        </button>
+                                                    </a>
+                                                </div>
+                                                <div class="remove">
+                                                    <form action="{{ route('admin.products.destroy', $product) }}"
+                                                          method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="btn btn-sm btn-danger remove-item-btn"
+                                                                type="submit">Remove
+                                                        </button>
+                                                    </form>
+                                                    {{--                                                    <button class="btn btn-sm btn-danger remove-item-btn"--}}
+                                                    {{--                                                            data-product="{{ route('admin.products.destroy', $product) }}"--}}
+                                                    {{--                                                            id="deleteProduct"--}}
+                                                    {{--                                                            data-bs-toggle="modal"--}}
+                                                    {{--                                                            data-bs-target="#deleteRecordModal">Remove--}}
+                                                    {{--                                                    </button>--}}
+                                                </div>
                                             </div>
-                                            <div class="remove">
-                                                <button class="btn btn-sm btn-danger remove-item-btn"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#deleteRecordModal">Remove
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                             <div class="noresult" style="display: none">
@@ -206,7 +235,7 @@
                         <div class="hstack gap-2 justify-content-end">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close
                             </button>
-{{--                            <button type="submit" class="btn btn-success" id="add-btn">Add Customer</button>--}}
+                            {{--                            <button type="submit" class="btn btn-success" id="add-btn">Add Customer</button>--}}
                             <!-- <button type="button" class="btn btn-success" id="edit-btn">Update</button> -->
                         </div>
                     </div>
@@ -237,9 +266,13 @@
                     <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
                         <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Close
                         </button>
-                        <button type="button" class="btn w-sm btn-danger " id="delete-record">Yes, Delete
-                            It!
-                        </button>
+                        <form action="" method="post" id="deleteProductForm">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn w-sm btn-danger " id="delete-record">Yes, Delete
+                                It!
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -259,4 +292,15 @@
 
     <!-- Sweet Alerts js -->
     <script src="{{ asset('theme/admin/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+@endsection
+
+@section('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let button = document.getElementsByName('deleteProduct');
+            button.addEventListener('click', function () {
+                document.querySelector('#deleteProductForm').action = button.getAttribute('data-product');
+            });
+        });
+    </script>
 @endsection

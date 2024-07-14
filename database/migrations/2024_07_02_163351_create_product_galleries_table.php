@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_galleries', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\Product::class)->constrained();
-            $table->string('product_gallery_image');
+            $table->string('product_gallery_image')->nullable();
             $table->timestamps();
         });
     }
